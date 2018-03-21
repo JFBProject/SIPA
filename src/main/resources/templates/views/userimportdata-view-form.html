@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:formview="http://navakij.co.th/thymeleaf/formview"
+      class="fixed sidebar-left-sm">
+<head>
+    <object th:remove="tag" th:include="layout/headtag :: headtag"></object>
+    <object th:remove="tag" th:include="layout/header-menuaction :: header-menuaction"></object>
+</head>
+<body class="body-background">
+<section class="body">
+    <form id="form" th:action="@{/userimportdata/save}" th:object="${formModel}" method="post">
+        <!-- start: Menu Action -->
+        <section th:replace="layout/menu-form :: menu-form-action(view_state=${view_state})"></section>
+        
+        <!-- start: Main Page -->
+        <input type="hidden" th:field="*{params}" />
+        
+        <section class="form-body">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                    </div>
+                    <div th:if="${view_state} == 'EDIT' or ${view_state} == 'NEW' " class="panel-title">Import Data
+                    </div>
+                    <div th:if="${view_state} == 'VIEW'" class="panel-title">Import Data Information</div>
+                    <div class="panel-buttons">
+                        <!-- <button type="button" class="btn btn-primary btn-sm">Add Item</button> -->
+                        <div class="DisplayStatus">Status : <span class="text-primary" th:text="*{statusName}"></span>
+                        </div>
+                    </div>
+                </header>
+                <div class="panel-body">
+					
+                        <div th:if="${view_state} == 'EDIT' or ${view_state} == 'NEW' ">
+							<div class="row">
+								<div class="form-group">
+								    <label class="col-md-2 control-label text-right valign-middle" >Document No. <span class="required">*</span></label>
+								    <div class="col-md-4">
+								        <input class="form-control input-group input-group-sm disabled" placeholder="Document No. (System Input Automatically)" type="text" th:field="*{code}" readonly/>
+								    </div>
+								</div>
+							</div>
+							<br>
+							<div class="row">
+	                            <div class="form-group">
+	                                <label class="col-md-2 control-label text-right" >Import Mapping<span class="required">*</span></label>
+	                               <div class="col-md-4">
+	                               		<select class="form-control" th:field="*{userDataTemplateMappingModel.id}">
+	                                        <option class="text-bold" th:each="sts : ${userDataTemplateMappingDropdown}" th:value="${sts.id}" th:text="${sts.name}"></option>
+	                                    </select>
+	                                </div>
+	                            </div>
+							</div>
+							<br>
+                            <div class="row">
+	                            <div class="form-group">
+	                                <label class="col-md-2 control-label text-right" for="fileupload"> Select Import File <span class="required">*</span></label>
+	                                <div class="col-md-4">
+	                                    <div class="fileupload fileupload-new" data-provides="fileupload" name="fileUpload">
+	                                        <div class="input-append">
+	                                            <div class="uneditable-input" >
+	                                                <i class="fa fa-file fileupload-exists"></i>
+	                                                <span class="fileupload-preview"></span>
+	                                            </div>
+	                                            <span class="btn btn-default btn-file">
+													<span class="fileupload-exists">&nbsp;&nbsp;Change&nbsp;</span>
+													<span class="fileupload-new">Select file</span>
+													<input type="file" th:field="*{userDataTemplateModel.uploadFile}"/>
+													<input type="hidden" th:field="*{userDataTemplateModel.id}" />
+													<input type="hidden" th:field="*{userDataTemplateModel.code}" />
+												</span>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            </div>
+                            <br>
+                            <div class="row">
+								<div class="form-group">
+								    <label class="col-md-2 control-label text-right valign-middle" >Year <span class="required">*</span></label>
+								    <div class="col-md-4">
+										<select class="form-control" th:field="*{criteriaModel.year}">
+                                        	<option class="text-bold" th:each="sts : ${yearDropdown}" th:value="${sts.value}" th:text="${sts.name}"></option>
+                                    	</select> 
+								    </div>
+								</div>
+							</div>
+                            <br>
+                            <div class="row">
+								<div class="form-group">
+								    <label class="col-md-2 control-label text-right valign-middle" >Month <span class="required">*</span></label>
+								    <div class="col-md-4">
+							        	<select class="form-control" th:field="*{criteriaModel.toMonth}">
+											<option class="text-bold" th:each="sts : ${monthDropdown}" th:value="${sts.value}" th:text="${sts.name}"></option>
+										</select>
+								    </div>
+								    
+								    <div class="col-md-4" style="visibility:hidden;">
+										<input class="form-control input-group input-group-sm disabled" type="text" th:value="${monthDropdown.get(formModel.criteriaModel.startMonth).name}" readonly/>
+								        <input type="hidden" th:field="*{criteriaModel.startMonth}"/>
+								    </div>
+								    <label class="col-md-1 text-center" style="visibility:hidden;">to</label>
+								    
+								</div>
+							</div>
+                            
+                            
+                    	</div>
+                    <div th:if="${view_state} == 'VIEW'">
+                        
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" style="min-width: 200px;">System Category</span>
+                                    <label class="form-control text-bold" placeholder="Template Category" th:text="*{systemCate}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" style="min-width: 200px; height: auto;">Ref. JobsScheduler Doc.No.</span>
+                                    <span class="form-control" style="height: auto;">
+                                        <div class="progress progress-striped light">
+                                            <div class="progress-bar progress-bar-success" 
+                                            	role="progressbar" 
+                                            	aria-valuemin="0" 
+                                            	aria-valuemax="100"  
+                                            	id="formProgress"
+                                            	th:attr="aria-valuenow=${formModel.progress100Percent}" 
+                                            	th:style="'width:' + ${formModel.progress100Percent}+';'">
+                                                <span  id="progressPercent" th:text="${formModel.progress100Percent}"></span>%
+                                            </div>
+                                        </div>
+                                        <label class="text-bold" th:text="${formModel.code}"></label> 
+                                        <span th:if="${formModel.templateFileOutboundModels != null}" class="text-bold" style="margin-left: 40px;" id="progressFullUrlDownload">Result : 
+                                        	<a th:each="itemFile , itrStatFile : ${formModel.templateFileOutboundModels}" th:href="${itemFile.fullUrlDownload}" target="_self">
+                                        		<i class="fa fa-download"></i> <span class="text-bold"  >Download</span>
+                                        	</a>
+                                        </span>
+                                        <span th:if="${formModel.templateFileOutboundModels == null}" class="text-bold" style="margin-left: 40px;" id="progressFullUrlDownload">Result : 
+										</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+						<div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" style="min-width: 200px;">Criteria</span>
+                                    <span class="form-control text-bold" placeholder="Template Category" th:text="${'Year : ' + formModel.criteriaModel.year + ', Month : ' + monthDropdown.get(formModel.criteriaModel.startMonth).name + ' - ' + monthDropdown.get(formModel.criteriaModel.toMonth).name}" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" style="min-width: 200px;">Download User Template</span>
+                                    <span th:if="${formModel.userDataTemplateModel.fullUrlDownload == null}" class="form-control"  />
+                                    <a th:if="${formModel.userDataTemplateModel.fullUrlDownload != null}" class="form-control" th:href="${formModel.userDataTemplateModel.fullUrlDownload}" target="_self"><i class="fa fa-download"></i> <span class="text-bold" th:text="${formModel.userDataTemplateModel.fileName}" /></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" style="min-width: 200px;">Download User Mapping</span>
+                                    <span th:if="${formModel.userDataTemplateMappingModel.fullUrlDownload == null}" class="form-control"  />
+                                    <a th:if="${formModel.userDataTemplateMappingModel.fullUrlDownload != null}" class="form-control" th:href="${formModel.userDataTemplateMappingModel.fullUrlDownload}" target="_self"><i class="fa fa-download"></i> <span class="text-bold" th:text="${formModel.userDataTemplateMappingModel.fileName}" /></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section th:replace="layout/statusbar :: statusbar(commonFieldsModelForm=${formModel})"></section>
+    </form>
+    <div th:replace="layout/display-standard-parameter-mapping :: displaystandard"></div>
+</section>
+</body>
+
+<div th:replace="layout/script :: script"></div>
+<script  th:src="${#httpServletRequest.getContextPath()} + '/resources/js/websocket/sockjs-0.3.4.js'"></script>
+<script  th:src="${#httpServletRequest.getContextPath()} + '/resources/js/websocket/stomp.js'"></script>
+<script  th:src="${#httpServletRequest.getContextPath()} + '/resources/js/websocket/websocket-js-form.js'"></script>
+<script th:src="${#httpServletRequest.getContextPath()} + '/resources/js/user-import-data/user-import-data-js-form.js'"></script>
+<formview:notify/>
+</html>
